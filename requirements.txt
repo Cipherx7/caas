@@ -1,0 +1,11 @@
+Django==5.2.7
+# ASGI server stack
+gunicorn==21.2.0
+uvicorn==0.30.6
+# Static files in production
+whitenoise[brotli]==6.7.0
+# Postgres
+psycopg[binary]==3.2.1
+dj-database-url==2.2.0
+# Admin theme
+django-unfold==0.37.0
