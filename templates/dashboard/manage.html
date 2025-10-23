@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load unfold %}
+{% block title %}Manage {{ community.name }}{% endblock %}
+{% block content %}
+<section class="how">
+  <div class="container">
+    <div class="section-head">
+      <h2>Manage community</h2>
+      <div class="muted">{{ community.name }} · {{ community.location }}</div>
+    </div>
+
+    <div class="cta-inner" style="gap:10px; margin-bottom:16px">
+      <a class="btn btn-primary" href="{% url 'community_edit_pk' community.id %}">Edit Profile</a>
+      <a class="btn btn-secondary" href="{% url 'events_list_create' community.id %}">Manage Events</a>
+      <a class="btn btn-secondary" href="{% url 'sponsorships_list_create' community.id %}">Manage Sponsorships</a>
+      <a class="btn btn-secondary" href="{% url 'sponsors_list_create' community.id %}">Manage Sponsors</a>
+    </div>
+
+    <div class="grid-two">
+      {% component "unfold/components/card.html" %}
+        {% component "unfold/components/title.html" %}Recent events{% endcomponent %}
+        <div style="display:grid;gap:8px">
+          {% for e in events %}
+          <div style="display:flex;justify-content:space-between;gap:8px">
+            <div>{{ e.title }}</div>
+            <div class="muted">{{ e.date|date:'M d, Y' }}</div>
+          </div>
+          {% empty %}
+          <p class="muted">No events yet.</p>
+          {% endfor %}
+        </div>
+      {% endcomponent %}
+      {% component "unfold/components/card.html" %}
+        {% component "unfold/components/title.html" %}Recent sponsorships{% endcomponent %}
+        <div style="display:grid;gap:8px">
+          {% for s in sponsorships %}
+          <div style="display:flex;justify-content:space-between;gap:8px">
+            <div>{{ s.sponsor.name }}</div>
+            <div class="muted">{{ s.date|date:'M d, Y' }}</div>
+            <div>₹{{ s.amount|floatformat:0 }}</div>
+          </div>
+          {% empty %}
+          <p class="muted">No sponsorships yet.</p>
+          {% endfor %}
+        </div>
+      {% endcomponent %}
+    </div>
+  </div>
+</section>
+{% endblock %}

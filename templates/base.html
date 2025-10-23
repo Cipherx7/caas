@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Community Hub{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <div class="brand">Community Hub</div>
+      <nav>
+        <a href="#how" class="nav-link">How it works</a>
+        <a href="/communities/" class="nav-link">Communities</a>
+        <a href="/sponsors/" class="nav-link">Sponsors</a>
+        <a href="#impact" class="nav-link">Impact</a>
+      </nav>
+      <div class="auth">
+        {% if request.user.is_authenticated %}
+          {% if is_leader %}
+            <a class="btn btn-secondary" href="/dashboard/leader/">Dashboard</a>
+          {% else %}
+            <a class="btn btn-primary" href="/communities/new/">List Your Community</a>
+          {% endif %}
+          <form method="post" action="{% url 'logout' %}" style="display:inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline">Log out</button>
+          </form>
+        {% else %}
+          <a class="btn btn-outline" href="/accounts/login/">Log in</a>
+          <a class="btn btn-primary" href="/accounts/signup/">Join</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p class="muted">© {{ now|date:'Y' }} Community Hub. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

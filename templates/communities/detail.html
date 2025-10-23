@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}{{ community.name }} · Profile{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding:40px 0 24px;background:linear-gradient(180deg,#f8fbff,transparent)">
+  <div class="container">
+    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+      <div style="width:72px;height:72px;border-radius:12px;border:1px solid #e2e8f0;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden">
+        {% if community.logo_url %}
+        <img src="{{ community.logo_url }}" alt="{{ community.name }}" style="width:100%;height:100%;object-fit:cover">
+        {% else %}
+        <div class="muted" style="font-weight:700">{{ community.name|first|upper }}</div>
+        {% endif %}
+      </div>
+      <div style="flex:1;min-width:240px">
+        <h1 style="margin:0">{{ community.name }}</h1>
+        {% if community.tagline %}<div class="muted">{{ community.tagline }}</div>{% endif %}
+        <div class="meta">{{ community.location }}{% if community.verified %} · Verified{% endif %}</div>
+      </div>
+      <div>
+        <a class="btn btn-primary" href="#join">Join</a>
+        <a class="btn btn-outline" href="#contact">Contact Leaders</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how" style="padding-top:0">
+  <div class="container grid-main">
+    <div>
+      <h2>About</h2>
+      <p>{{ community.about|default:community.description }}</p>
+      <div class="muted" style="margin-top:12px">
+        Founded: {{ community.created_at|date:'M d, Y' }}
+        {% if community.website_url %} · Website: <a href="{{ community.website_url }}" class="link" target="_blank" rel="noopener">{{ community.website_url }}</a>{% endif %}
+        {% if community.contact_email %} · Contact: <a href="mailto:{{ community.contact_email }}" class="link">{{ community.contact_email }}</a>{% endif %}
+      </div>
+
+      <h2 style="margin-top:24px">Past Events</h2>
+      <div class="card-grid" style="grid-template-columns:repeat(2,1fr)">
+        {% for e in events %}
+        <article class="card">
+          <div style="display:flex;gap:12px">
+            <div style="width:72px;height:72px;border-radius:8px;background:#f1f5f9;border:1px solid #e2e8f0;overflow:hidden">
+              {% if e.image_url %}<img src="{{ e.image_url }}" alt="{{ e.title }}" style="width:100%;height:100%;object-fit:cover">{% endif %}
+            </div>
+            <div>
+              <h3 style="margin:0 0 4px">{{ e.title }}</h3>
+              <div class="meta">{{ e.date|date:'M d, Y' }}</div>
+              <p class="muted">{{ e.description|truncatechars:120 }}</p>
+            </div>
+          </div>
+        </article>
+        {% empty %}
+        <p class="muted">No events yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+    <aside>
+      <h2>Sponsors</h2>
+      <div class="card" style="padding:0">
+        <div style="padding:16px;border-bottom:1px solid #e2e8f0">
+          <div class="stat-value">₹{{ total_amount|floatformat:0|intcomma }}</div>
+          <div class="stat-label">Total Sponsorship</div>
+        </div>
+        <div style="padding:16px;display:grid;gap:12px">
+          {% for s in sponsorships %}
+          <div style="display:flex;gap:10px;align-items:center">
+            <div style="width:32px;height:32px;border-radius:6px;border:1px solid #e2e8f0;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden">
+              {% if s.sponsor.logo_url %}<img src="{{ s.sponsor.logo_url }}" alt="{{ s.sponsor.name }}" style="width:100%;height:100%;object-fit:cover">{% else %}<span class="muted" style="font-weight:700">{{ s.sponsor.name|first|upper }}</span>{% endif %}
+            </div>
+            <div style="flex:1">
+              <div style="font-weight:600"><a class="link" href="{% url 'sponsor_detail' s.sponsor.id %}">{{ s.sponsor.name }}</a></div>
+              <div class="meta">{{ s.date|date:'M d, Y' }} · {{ s.get_contribution_type_display }}</div>
+            </div>
+            <div style="font-weight:700">₹{{ s.amount|floatformat:0|intcomma }}</div>
+          </div>
+          {% empty %}
+          <p class="muted">No sponsors yet.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="cta-footer">
+  <div class="container cta-inner">
+    <div>
+      <h2>See Sponsor History</h2>
+      <p class="muted">Track contributions and growth over time.</p>
+    </div>
+    <div>
+      <a class="btn btn-primary" href="#proposals">Send Proposal</a>
+      <a class="btn btn-outline" href="#history">Sponsor History</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

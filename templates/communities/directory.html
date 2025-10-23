@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Communities Directory{% endblock %}
+
+{% block content %}
+<section class="communities">
+  <div class="container">
+    <div class="section-head">
+      <h2>Communities Directory</h2>
+      <span class="muted">{{ total }} results</span>
+    </div>
+
+    <form method="get" class="filters" style="margin-bottom:16px; gap:12px; display:flex; flex-wrap:wrap; align-items:end">
+      <div>
+        <label class="muted" for="q">Search</label><br>
+        <input id="q" name="q" type="text" value="{{ q }}" placeholder="Search by name or description" style="padding:10px;border:1px solid #e2e8f0;border-radius:8px;min-width:260px">
+      </div>
+      <div>
+        <label class="muted" for="location">Location</label><br>
+        <input id="location" name="location" type="text" value="{{ location }}" placeholder="City or region" style="padding:10px;border:1px solid #e2e8f0;border-radius:8px;min-width:180px">
+      </div>
+      <div>
+        <label class="muted" for="sort">Sort</label><br>
+        <select id="sort" name="sort" style="padding:10px;border:1px solid #e2e8f0;border-radius:8px;min-width:180px">
+          <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+          <option value="most-sponsored" {% if sort == 'most-sponsored' %}selected{% endif %}>Most Sponsored</option>
+          <option value="recently-active" {% if sort == 'recently-active' %}selected{% endif %}>Recently Active</option>
+          <option value="recently-funded" {% if sort == 'recently-funded' %}selected{% endif %}>Recently Funded</option>
+        </select>
+      </div>
+      <div>
+        <label class="muted" for="verified">Verified only</label><br>
+        <input id="verified" name="verified" type="checkbox" {% if verified_checked %}checked{% endif %}>
+      </div>
+      <div>
+        <button class="btn btn-primary" type="submit">Apply</button>
+        <a class="btn btn-outline" href="?">Clear</a>
+      </div>
+    </form>
+
+    <div class="card-grid">
+      {% for c in page_obj.object_list %}
+      <article class="card">
+        <div class="card-badges">
+          {% if c.verified %}<span class="badge">Verified</span>{% endif %}
+          {% if c.funded_recently %}<span class="badge" style="background:#ecfdf5;border-color:#86efac;color:#166534">Funded Recently</span>{% endif %}
+        </div>
+        <h3>{{ c.name }}</h3>
+        <p class="muted">{{ c.description }}</p>
+        <p class="meta">{{ c.location }} · {{ c.sponsors_count }} sponsors</p>
+        <div class="card-actions">
+          <a href="#join" class="btn btn-secondary">Join</a>
+          <a href="{% url 'community_detail' c.id %}" class="btn btn-outline">View Profile</a>
+        </div>
+      </article>
+      {% empty %}
+      <p class="muted">No communities found for your filters.</p>
+      {% endfor %}
+    </div>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:16px">
+      {% if page_obj.has_previous %}
+      <a class="btn btn-outline" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&location={{ location }}&sort={{ sort }}{% if verified_checked %}&verified=on{% endif %}">Previous</a>
+      {% endif %}
+      <span class="muted" style="align-self:center">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+      <a class="btn btn-outline" href="?page={{ page_obj.next_page_number }}&q={{ q }}&location={{ location }}&sort={{ sort }}{% if verified_checked %}&verified=on{% endif %}">Next</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Edit Event · {{ community.name }}{% endblock %}
+{% block content %}
+<section class="how">
+  <div class="container" style="max-width:720px">
+    <h2>Edit Event</h2>
+    <form method="post" style="display:grid;gap:12px">
+      {% csrf_token %}
+      {% for field in form %}
+      <div>
+        <label>{{ field.label }}</label>
+        {{ field }}
+        {{ field.errors }}
+      </div>
+      {% endfor %}
+      <button class="btn btn-primary" type="submit">Save</button>
+      <a class="btn btn-outline" href="{% url 'events_list_create' community.id %}">Cancel</a>
+    </form>
+  </div>
+</section>
+{% endblock %}

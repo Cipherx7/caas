@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Sponsors Directory{% endblock %}
+{% block content %}
+<section class="how">
+  <div class="container">
+    <div class="section-head">
+      <h2>Sponsors</h2>
+      <form method="get" style="display:flex;gap:8px;align-items:center">
+        <input type="text" name="q" placeholder="Search sponsors..." value="{{ q }}" />
+        <button class="btn btn-outline" type="submit">Search</button>
+      </form>
+    </div>
+
+    <div class="card-grid">
+      {% for s in page_obj %}
+      <article class="card" style="display:flex;gap:12px;align-items:center">
+        {% if s.logo_url %}
+        <img src="{{ s.logo_url }}" alt="{{ s.name }}" style="width:56px;height:56px;object-fit:contain;background:#fff;border:1px solid #eee;border-radius:8px" />
+        {% endif %}
+        <div style="flex:1">
+          <h3 style="margin:0 0 6px"><a class="link" href="{% url 'sponsor_detail' s.id %}">{{ s.name }}</a></h3>
+          {% if s.description %}<p class="muted" style="margin:0">{{ s.description }}</p>{% endif %}
+        </div>
+        <div>
+          <a class="btn btn-secondary" href="{% url 'sponsor_detail' s.id %}">View</a>
+        </div>
+      </article>
+      {% empty %}
+      <p class="muted">No sponsors found.</p>
+      {% endfor %}
+    </div>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+      <a class="btn btn-outline" href="?page={{ page_obj.previous_page_number }}&q={{ q }}">Previous</a>
+      {% endif %}
+      <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+      <a class="btn btn-outline" href="?page={{ page_obj.next_page_number }}&q={{ q }}">Next</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

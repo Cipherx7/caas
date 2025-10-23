@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}{{ sponsor.name }} · Sponsor{% endblock %}
+{% block content %}
+<section class="how">
+  <div class="container">
+    <div class="section-head">
+      <div style="display:flex;gap:16px;align-items:center">
+        {% if sponsor.logo_url %}
+        <img src="{{ sponsor.logo_url }}" alt="{{ sponsor.name }}" style="width:64px;height:64px;object-fit:contain;background:#fff;border:1px solid #eee;border-radius:10px" />
+        {% endif %}
+        <div>
+          <h2 style="margin:0 0 6px">{{ sponsor.name }}</h2>
+          {% if sponsor.description %}<div class="muted">{{ sponsor.description }}</div>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Supported communities</h3>
+      <div style="display:grid;gap:10px">
+        {% for s in sponsorships %}
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+          <div>
+            <a class="link" href="{% url 'community_detail' s.community.id %}">{{ s.community.name }}</a>
+            <div class="muted">{{ s.date|date:'M d, Y' }} · {{ s.get_contribution_type_display }}</div>
+          </div>
+          <div><strong>₹{{ s.amount|floatformat:0|intcomma }}</strong></div>
+        </div>
+        {% empty %}
+        <p class="muted">No sponsorships recorded yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="stats" style="margin-top:16px">
+      <div class="stat">
+        <div class="stat-value">₹{{ total_amount|floatformat:0|intcomma }}</div>
+        <div class="stat-label">Total Funding</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">{{ sponsorships|length }}</div>
+        <div class="stat-label">Sponsorships</div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Manage Events · {{ community.name }}{% endblock %}
+{% block content %}
+<section class="how">
+  <div class="container">
+    <div class="section-head">
+      <h2>Events</h2>
+      <a class="link" href="{% url 'community_manage_pk' community.id %}">← Back to Manage</a>
+    </div>
+
+    <form method="post" class="card" style="display:grid;gap:12px; padding:16px; margin-bottom:16px">
+      <h3>Add new event</h3>
+      {% csrf_token %}
+      {% for field in form %}
+      <div>
+        <label>{{ field.label }}</label>
+        {{ field }}
+        {{ field.errors }}
+      </div>
+      {% endfor %}
+      <button class="btn btn-primary" type="submit">Add Event</button>
+    </form>
+
+    <div class="card">
+      <h3>All events</h3>
+      <div style="display:grid;gap:8px">
+        {% for e in events %}
+        <div style="display:flex;justify-content:space-between;gap:8px;align-items:center">
+          <div>
+            <div style="font-weight:600">{{ e.title }}</div>
+            <div class="muted">{{ e.date|date:'M d, Y' }}</div>
+          </div>
+          <div>
+            <a class="btn btn-secondary" href="{% url 'event_edit' community.id e.id %}">Edit</a>
+            <form method="post" action="{% url 'event_delete' community.id e.id %}" style="display:inline">
+              {% csrf_token %}
+              <button class="btn btn-outline" type="submit">Delete</button>
+            </form>
+          </div>
+        </div>
+        {% empty %}
+        <p class="muted">No events yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

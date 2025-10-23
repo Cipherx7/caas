@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Empowering Every Community{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <h1>Empowering Every Community to Connect, Grow, and Get Sponsored.</h1>
+      <p class="subtext">A single space for all communities to gain exposure, track funding, and connect with sponsors.</p>
+      <div class="cta-row">
+  <a class="btn btn-primary" href="/communities/new/">List Your Community</a>
+        <a class="btn btn-secondary" href="#communities">Explore Communities</a>
+        <a class="link" href="#sponsor">Become a Sponsor →</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <canvas id="networkCanvas" width="520" height="320" aria-hidden="true"></canvas>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="how">
+  <div class="container">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="icon">📝</div>
+        <h3>List Your Community</h3>
+        <p>Create a verified public profile.</p>
+      </div>
+      <div class="step">
+        <div class="icon">📈</div>
+        <h3>Show Your Impact</h3>
+        <p>Share events, photos, and member stories.</p>
+      </div>
+      <div class="step">
+        <div class="icon">🤝</div>
+        <h3>Get Sponsored</h3>
+        <p>Connect with verified sponsors and track funding.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="communities" class="communities">
+  <div class="container">
+    <div class="section-head">
+      <h2>Community Showcase</h2>
+      <div class="filters">
+        <button class="chip chip-active">Featured</button>
+        <button class="chip">Trending</button>
+        <button class="chip">Recently Funded</button>
+        <button class="chip">Newest Added</button>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      {% for c in featured_communities %}
+      <article class="card">
+        <div class="card-badges">
+          {% if c.verified %}<span class="badge">Verified</span>{% endif %}
+        </div>
+        <h3>{{ c.name }}</h3>
+        <p class="muted">{{ c.tagline }}</p>
+        <p class="meta">{{ c.location }}</p>
+        <div class="card-actions">
+          <a href="#join" class="btn btn-secondary">Join</a>
+          <a href="#profile" class="btn btn-outline">View Profile</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section id="sponsors" class="sponsors">
+  <div class="container">
+    <div class="section-head">
+      <h2>Sponsors Spotlight</h2>
+      <a class="link" href="#all-sponsors">View All Sponsors →</a>
+    </div>
+    <div class="logo-row">
+      {% for s in sponsors %}
+        <div class="logo">{{ s.name }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section id="impact" class="impact">
+  <div class="container">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-value">{{ stats.communities }}</div>
+        <div class="stat-label">Communities Listed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">{{ stats.funding }}</div>
+        <div class="stat-label">Funding Facilitated</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">{{ stats.sponsors }}</div>
+        <div class="stat-label">Active Sponsors</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="container">
+    <h2>Growth Stories</h2>
+    <div class="testimonial-grid">
+      {% for t in testimonials %}
+      <blockquote>
+        “{{ t.quote }}”
+        <footer>— {{ t.author }}</footer>
+      </blockquote>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="cta-footer">
+  <div class="container cta-inner">
+    <div>
+      <h2>Your community deserves recognition — and resources.</h2>
+      <p class="muted">Join the universal ecosystem for visibility, sponsor access, and growth tracking.</p>
+    </div>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="#list-community">List Your Community Free</a>
+      <a class="btn btn-outline" href="#sponsor-login">Log in to Sponsor Communities</a>
+    </div>
+  </div>
+</section>
+
+<script src="{% static 'js/network.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Sign up{% endblock %}
+{% block content %}
+<section class="how">
+  <div class="container" style="max-width:520px">
+    <h2>Create your account</h2>
+    <form method="post" style="display:grid;gap:12px">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      {% for field in form %}
+      <div>
+        <label>{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<div class="muted" style="font-size:12px">{{ field.help_text }}</div>{% endif %}
+        {{ field.errors }}
+      </div>
+      {% endfor %}
+      <button class="btn btn-primary" type="submit">Sign up</button>
+      <p class="muted">Already have an account? <a href="/accounts/login/" class="link">Log in</a></p>
+    </form>
+  </div>
+</section>
+{% endblock %}
